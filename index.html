@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Discipline Lock • Phases</title>
+
+  <style>
+    :root{
+      --bg:#f7f8ff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e8eaff;
+
+      --purple:#7c3aed;
+      --blue:#3b82f6;
+
+      --green:#22c55e;
+      --red:#ef4444;
+
+      --shadow: 0 20px 60px rgba(2,6,23,.08);
+      --shadow2: 0 10px 25px rgba(2,6,23,.06);
+      --radius:18px;
+    }
+
+    *{ box-sizing:border-box; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(1100px 700px at 10% -10%, rgba(124,58,237,.18), transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, rgba(59,130,246,.18), transparent 55%),
+        radial-gradient(900px 600px at 50% 110%, rgba(124,58,237,.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      padding:20px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .app{ width:100%; max-width:1100px; }
+
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:46px; height:46px;
+      border-radius:14px;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      box-shadow: 0 12px 30px rgba(124,58,237,.25);
+      display:grid; place-items:center;
+      color:#fff; font-weight:900; letter-spacing:.5px;
+    }
+    h1{ margin:0; font-size:22px; line-height:1.1; }
+    .subtitle{ margin:4px 0 0; color:var(--muted); font-size:13px; }
+
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(124,58,237,.08);
+      border:1px solid rgba(124,58,237,.20);
+      color:#4c1d95;
+      font-weight:1000;
+      font-size:13px;
+      white-space:nowrap;
+    }
+    @media (max-width:900px){ .pill{ display:none; } }
+
+    .card{
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding:16px;
+    }
+
+    .btn{
+      border:none;
+      padding:12px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:1000;
+      color:white;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      box-shadow: 0 14px 30px rgba(59,130,246,.18);
+      transition: transform .08s ease, filter .2s ease;
+      white-space:nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn:hover{ filter: brightness(1.03); }
+
+    .ghost{
+      background:#fff;
+      color:#111827;
+      border:1px solid var(--border);
+      box-shadow:none;
+      font-weight:1000;
+    }
+    .ghost:hover{
+      box-shadow: 0 0 0 6px rgba(59,130,246,.10);
+      border-color: rgba(59,130,246,.35);
+    }
+
+    .dangerBtn{
+      background:#fff;
+      color:#b91c1c;
+      border:1px solid rgba(239,68,68,.35);
+      box-shadow:none;
+      font-weight:1000;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .section-head h2{ margin:0; font-size:15px; }
+    .tiny{ font-size:12px; color:var(--muted); }
+
+    /* Views */
+    .view.hidden{ display:none; }
+
+    /* HOME: Phase shells */
+    .phaseGrid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:14px;
+    }
+    @media (max-width:900px){
+      .phaseGrid{ grid-template-columns:1fr; }
+    }
+
+    .phaseCard{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#fff;
+      padding:14px;
+      box-shadow: 0 12px 28px rgba(2,6,23,.05);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+    }
+    .phaseName{
+      font-weight:1000;
+      font-size:16px;
+      margin:0;
+    }
+    .phaseMeta{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:1000;
+      border:1px solid var(--border);
+      background:#fff;
+      color:#334155;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    /* PHASE layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:16px;
+    }
+    @media (max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    input[type="text"]{
+      flex:1;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      outline:none;
+      font-size:14px;
+      transition: box-shadow .2s, border-color .2s;
+      background:#fff;
+    }
+    input[type="text"]:focus{
+      border-color: rgba(124,58,237,.35);
+      box-shadow: 0 0 0 6px rgba(124,58,237,.10);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:1000;
+      border:1px solid var(--border);
+      background:#fff;
+      color:#334155;
+      width:fit-content;
+      user-select:none;
+    }
+    .badge.locked{
+      background: rgba(239,68,68,.07);
+      border-color: rgba(239,68,68,.18);
+      color:#991b1b;
+    }
+    .badge.unlocked{
+      background: rgba(34,197,94,.08);
+      border-color: rgba(34,197,94,.18);
+      color:#166534;
+    }
+    .badgeNone{
+      background: rgba(59,130,246,.07);
+      border-color: rgba(59,130,246,.18);
+      color:#1e3a8a;
+    }
+
+    /* Day nav */
+    .dayNav{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+    }
+    .circleBtn{
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-weight:1000;
+      transition: box-shadow .2s, border-color .2s, transform .08s;
+    }
+    .circleBtn:hover{
+      box-shadow: 0 0 0 6px rgba(124,58,237,.08);
+      border-color: rgba(124,58,237,.30);
+    }
+    .circleBtn:active{ transform: translateY(1px); }
+    .dayPill{
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(124,58,237,.28);
+      background: rgba(124,58,237,.08);
+      font-weight:1000;
+      color:#3b1d95;
+      min-width:90px;
+      text-align:center;
+    }
+
+    /* Habits */
+    .habit{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow: 0 10px 25px rgba(2,6,23,.03);
+      margin-bottom:10px;
+    }
+    .habit.doneRow{
+      border-color: rgba(34,197,94,.25);
+      background: rgba(34,197,94,.03);
+    }
+    .habit.missRow{
+      border-color: rgba(239,68,68,.22);
+      background: rgba(239,68,68,.03);
+    }
+
+    .cb{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      cursor:pointer;
+      user-select:none;
+      min-width:0;
+      flex:1;
+    }
+    .cb input{
+      appearance:none;
+      -webkit-appearance:none;
+      width:22px;
+      height:22px;
+      border-radius:7px;
+      border:2px solid #c7c9ff;
+      background:#fff;
+      display:grid;
+      place-items:center;
+      transition: all .18s ease;
+      flex-shrink:0;
+      margin-top:2px;
+    }
+    .cb input::after{
+      content:"✓";
+      font-weight:1000;
+      font-size:14px;
+      color:#fff;
+      opacity:0;
+      transform: scale(.7);
+      transition: all .18s ease;
+    }
+    .cb input:checked{
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color:#16a34a;
+    }
+    .cb input:checked::after{
+      opacity:1;
+      transform: scale(1);
+    }
+
+    .habit-name{
+      font-weight:1000;
+      font-size:14px;
+      line-height:1.25;
+      color:#0f172a;
+      word-break:break-word;
+    }
+    .habit-meta{ margin-top:6px; font-size:12px; color:var(--muted); }
+
+    .badgeDone{
+      background: rgba(34,197,94,.08);
+      border-color: rgba(34,197,94,.18);
+      color:#166534;
+    }
+    .badgeMiss{
+      background: rgba(239,68,68,.08);
+      border-color: rgba(239,68,68,.18);
+      color:#991b1b;
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-shrink:0;
+    }
+    .icon{
+      width:54px;
+      height:46px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-weight:1000;
+      display:grid;
+      place-items:center;
+      transition: box-shadow .2s, border-color .2s, transform .08s;
+    }
+    .icon:active{ transform: translateY(1px); }
+    .icon.miss{
+      border-color: rgba(239,68,68,.30);
+    }
+    .icon.miss:hover{
+      box-shadow: 0 0 0 6px rgba(239,68,68,.10);
+      border-color: rgba(239,68,68,.55);
+    }
+    .icon.clear{
+      border-color: rgba(59,130,246,.25);
+    }
+    .icon.clear:hover{
+      box-shadow: 0 0 0 6px rgba(59,130,246,.10);
+      border-color: rgba(59,130,246,.45);
+    }
+
+    /* Progress */
+    .bars{
+      height:12px;
+      border-radius:999px;
+      background:#eef2ff;
+      overflow:hidden;
+      border:1px solid var(--border);
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      transition: width .25s ease;
+    }
+    .big{
+      font-size:34px;
+      font-weight:1000;
+      letter-spacing:-.5px;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      margin:2px 0 0;
+    }
+
+    /* Goals */
+    .goalCard{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:#fff;
+      padding:12px;
+      margin-top:10px;
+    }
+    .goalTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .goalTitle{
+      font-weight:1000;
+      font-size:16px;
+      line-height:1.2;
+      word-break:break-word;
+    }
+    .goalBtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .miniBtn{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-weight:1000;
+      transition: box-shadow .2s, border-color .2s;
+    }
+    .miniBtn:hover{
+      box-shadow: 0 0 0 6px rgba(124,58,237,.08);
+      border-color: rgba(124,58,237,.30);
+    }
+    .goalMeta{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .goalBar{
+      height:10px;
+      border-radius:999px;
+      background:#eef2ff;
+      overflow:hidden;
+      border:1px solid var(--border);
+      margin-top:8px;
+    }
+    .goalFill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      transition: width .25s ease;
+    }
+
+    .empty{
+      padding:14px;
+      border-radius:16px;
+      border:1px dashed rgba(124,58,237,.28);
+      background: rgba(124,58,237,.05);
+      color:#4c1d95;
+      font-weight:1000;
+      margin-top:10px;
+    }
+
+    /* Modal */
+    .modal.hidden{ display:none; }
+    .modal{
+      position:fixed; inset:0;
+      background:rgba(2,6,23,.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:999;
+    }
+    /* Modal */
+.modal.hidden{ display:none; }
+.modal{
+  position:fixed; inset:0;
+  background:rgba(2,6,23,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  z-index:999;
+  overflow:hidden; /* ✅ overlay will NOT scroll */
+}
+
+/* ✅ POPUP scroll (the white box) */
+.modalCard{
+  width:min(560px, 95vw);
+  max-height: calc(100vh - 32px);   /* ✅ important */
+  overflow-y: auto;                  /* ✅ popup scroll */
+  -webkit-overflow-scrolling: touch; /* ✅ smooth on mobile */
+  background:#fff;
+  border-radius:18px;
+  padding:16px;
+  border:1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.modalTitle{
+  margin:0 0 8px;
+  font-size:16px;
+  font-weight:1000;
+}
+.linkRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-top:8px;
+  background:#fff;
+}
+
+/* ✅ THIS WAS MISSING "}" in your code */
+.modalActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <div class="header">
+      <div class="brand">
+        <div class="logo">DL</div>
+        <div>
+          <h1 id="topTitle">Discipline Lock • Warrior Mode</h1>
+          <div class="subtitle" id="topSub">Phases Home • Click a phase to open it</div>
+        </div>
+      </div>
+      <div class="pill" id="topPill">No delete • Goal ↔ Habit Align</div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div id="homeView" class="view">
+      <div class="card">
+        <div class="section-head">
+          <h2>5-Year Plan Shells (10 Phases)</h2>
+          <div class="tiny">Tap a phase → opens its tracker page</div>
+        </div>
+        <div class="phaseGrid" id="phaseGrid"></div>
+      </div>
+    </div>
+
+    <!-- PHASE VIEW -->
+    <div id="phaseView" class="view hidden">
+      <div class="grid">
+
+        <!-- LEFT -->
+        <div>
+          <div class="card">
+            <div class="section-head">
+              <h2 id="phaseTitle">Phase</h2>
+              <div id="lockBadge" class="badge unlocked">Unlocked</div>
+            </div>
+            <div class="row" style="justify-content:space-between; flex-wrap:wrap;">
+              <button class="btn ghost" id="backBtn">← Back</button>
+              <button class="btn" id="lockBtn">🔒 Lock Phase</button>
+            </div>
+            <div class="tiny" style="margin-top:10px;">
+              When locked: cannot delete goals/habits. (You can still ✅/❌/⟲)
+            </div>
+          </div>
+
+          <!-- Goals -->
+          <div class="card">
+            <div class="section-head">
+              <h2>Goals</h2>
+              <div class="tiny">Goal progress increases ONLY from linked habits.</div>
+            </div>
+            <div class="row">
+              <input id="goalInput" type="text" placeholder="Add goal (ex: English comfortable / Height 168cm)" />
+              <button class="btn" id="addGoalBtn">Add</button>
+            </div>
+            <div id="goalList"></div>
+          </div>
+
+          <!-- Habits -->
+          <div class="card">
+            <div class="section-head">
+              <h2>Habits (Daily)</h2>
+              <div id="habitsLockBadge" class="badge unlocked">Unlocked</div>
+            </div>
+            <div class="row">
+              <input id="habitInput" type="text" placeholder="Add habit (ex: Read 20 pages 📖 / Stretch 10 min 🧘)" />
+              <button class="btn" id="addHabitBtn">Add</button>
+            </div>
+
+            <div class="section-head" style="margin-top:14px;">
+              <h2 id="dayTitle">Habits for Day 1</h2>
+              <div class="dayNav">
+                <button class="circleBtn" id="prevDayBtn">◀</button>
+                <div class="dayPill" id="dayPill">Day 1</div>
+                <button class="circleBtn" id="nextDayBtn">▶</button>
+              </div>
+            </div>
+            <div class="tiny" style="margin:-6px 0 10px;">✅ done • ❌ missed • ⟲ clear</div>
+
+            <div id="habitList"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div>
+          <div class="card">
+            <div class="section-head">
+              <h2>Progress</h2>
+              <div class="badge badgeNone">Auto-saved</div>
+            </div>
+
+            <div class="tiny">Overall Completion</div>
+            <div class="big" id="overallPercent">0%</div>
+            <div class="bars"><div class="fill" id="overallBar"></div></div>
+            <div class="subtitle" id="overallText">0 done / 0 total (missed: 0).</div>
+
+            <div style="height:10px;"></div>
+
+            <div class="tiny">Today Completion</div>
+            <div style="font-weight:1000; font-size:18px;" id="todayPercent">0%</div>
+            <div class="bars"><div class="fill" id="todayBar"></div></div>
+            <div class="subtitle" id="todayText">Day 1: 0 done / 0 total (missed: 0).</div>
+
+            <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+              <button class="btn ghost" id="exportBtn">Export JSON</button>
+              <button class="btn ghost" id="importBtn">Import JSON</button>
+             </div>
+            <input id="fileInput" type="file" accept="application/json" style="display:none;">
+          </div>
+
+          <div class="card">
+            <div class="section-head">
+              <h2>Goals Progress</h2>
+              <div class="badge badgeNone">Aligned</div>
+            </div>
+            <div id="goalsProgressPanel"></div>
+          </div>
+
+          <div class="card">
+            <div class="section-head">
+              <h2>Notes</h2>
+              <div class="badge badgeNone">Rules</div>
+            </div>
+            <div class="subtitle" style="text-align:left;">
+              • Checkbox checked = done.<br/>
+              • ❌ marks missed.<br/>
+              • ⟲ clears the habit (not set).<br/>
+              • Goal progress only counts linked habits.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Link Modal -->
+  <div id="linkModal" class="modal hidden">
+    <div class="modalCard">
+      <div class="modalTitle" id="linkTitle">Link habits to goal</div>
+      <div class="tiny">Select habits that should increase this goal’s progress.</div>
+      <div id="linkList" style="margin-top:10px;"></div>
+      <div class="modalActions">
+        <button class="btn ghost" id="cancelLinkBtn">Cancel</button>
+        <button class="btn" id="saveLinkBtn">Save Links</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // HOME (shells) + PHASE page
+    // per-phase storage
+    // =========================
+
+    const TEMPLATES = [
+      { id:"p1_21d",  name:"21 Days Phase-1", days:21 },
+      { id:"p2_30d",  name:"30 Days Phase-2", days:30 },
+      { id:"p3_90d",  name:"90 Days Phase-3", days:90 },
+      { id:"p4_132d",  name:"132 Days Phase-4", days:132 },
+      { id:"p5_365d",  name:"180 Days Phase-5", days:180 },
+      { id:"p6_365d",  name:"365 Days Phase-6",  days:365 },
+      { id:"p7_180d",  name:"180 Days Phase-7", days:180 },
+      { id:"p8_180d",  name:"180 Days Phase-8", days:180 },
+      { id:"p9_180d",  name:"180 Days Phase-9", days:180 },
+      { id:"p10_90d", name:"90 Days Phase-10", days:90 },
+      { id:"p11_379d", name:"Final Phase ", days:379 } 
+];
+
+    const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+    const $ = (id) => document.getElementById(id);
+    const dayKey = (d) => "day" + d;
+
+    // active phase info
+    let activePhase = null;
+    let state = null;
+
+    function storageKey(phaseId){
+      return "DL_PHASE_" + phaseId;
+    }
+
+    function defaultStateFor(days){
+      return {
+        phaseDays: days,
+        currentDay: 1,
+        locked: false,
+        goals: [],        // {id,text}
+        habits: [],       // {id,text}
+        data: {},         // dayX => { habitId: true/false }
+        goalLinks: {}     // goalId => [habitId...]
+      };
+    }
+
+    function saveState(){
+      if(!activePhase) return;
+      localStorage.setItem(storageKey(activePhase.id), JSON.stringify(state));
+    }
+
+    function loadState(phase){
+      const key = storageKey(phase.id);
+      try{
+        const raw = localStorage.getItem(key);
+        if(!raw) return structuredClone(defaultStateFor(phase.days));
+        const s = JSON.parse(raw);
+
+        // fix / validate
+        if(!s || typeof s !== "object") return structuredClone(defaultStateFor(phase.days));
+        if(!Array.isArray(s.goals)) s.goals = [];
+        if(!Array.isArray(s.habits)) s.habits = [];
+        if(typeof s.data !== "object" || !s.data) s.data = {};
+        if(typeof s.goalLinks !== "object" || !s.goalLinks) s.goalLinks = {};
+        if(typeof s.currentDay !== "number") s.currentDay = 1;
+        if(typeof s.locked !== "boolean") s.locked = false;
+        s.phaseDays = phase.days;
+        s.currentDay = Math.min(Math.max(1, s.currentDay), s.phaseDays);
+
+        return s;
+      } catch {
+        return structuredClone(defaultStateFor(phase.days));
+      }
+    }
+
+    function escapeHTML(str){
+      return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // ---------- Views ----------
+    function showHome(){
+      $("homeView").classList.remove("hidden");
+      $("phaseView").classList.add("hidden");
+      $("topTitle").textContent = "Discipline Lock • Warrior Mode";
+      $("topSub").textContent = "Phases Home • Click a phase to open it";
+      activePhase = null;
+      state = null;
+      renderHome();
+    }
+
+    function showPhase(phase){
+      activePhase = phase;
+      state = loadState(phase);
+
+      $("homeView").classList.add("hidden");
+      $("phaseView").classList.remove("hidden");
+
+      $("topTitle").textContent = "Discipline Lock • Warrior Mode";
+      $("topSub").textContent = phase.name + " • Goals aligned with specific habits";
+
+      $("phaseTitle").textContent = phase.name + " (" + phase.days + " days)";
+      renderPhase();
+    }
+
+    // ---------- HOME render ----------
+    function computePhaseSummary(phase){
+      const s = loadState(phase);
+      const total = s.habits.length * s.phaseDays;
+
+      let done = 0;
+      let missed = 0;
+      for(let d=1; d<=s.phaseDays; d++){
+        const dd = s.data[dayKey(d)] || {};
+        s.habits.forEach(h => {
+          if(dd[h.id] === true) done++;
+          else if(dd[h.id] === false) missed++;
+        });
+      }
+      const pct = total ? Math.round((done/total)*100) : 0;
+      return { pct, done, total, missed, locked: s.locked };
+    }
+
+    function renderHome(){
+      const grid = $("phaseGrid");
+      grid.innerHTML = "";
+
+      TEMPLATES.forEach(p => {
+        const sum = computePhaseSummary(p);
+
+        const card = document.createElement("div");
+        card.className = "phaseCard";
+        card.innerHTML = `
+          <div style="min-width:0;">
+            <div class="phaseName">${escapeHTML(p.name)}</div>
+            <div class="phaseMeta">${p.days} days • ${sum.done}/${sum.total} done • missed: ${sum.missed}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+            <div class="chip">${sum.locked ? "🔒 Locked" : "🟢 Unlocked"}</div>
+            <button class="btn" type="button">Open</button>
+            <div class="chip">${sum.pct}%</div>
+          </div>
+        `;
+        card.querySelector("button").addEventListener("click", () => showPhase(p));
+        grid.appendChild(card);
+      });
+    }
+
+    // ---------- Phase logic ----------
+    function statusOf(day, habitId){
+      const d = state.data[dayKey(day)] || {};
+      if(d[habitId] === true) return "done";
+      if(d[habitId] === false) return "miss";
+      return "none";
+    }
+
+    function badgeFor(status){
+      if(status === "done") return `<span class="badge badgeDone">✅ Done</span>`;
+      if(status === "miss") return `<span class="badge badgeMiss">❌ Missed</span>`;
+      return `<span class="badge badgeNone">⏳ Not set</span>`;
+    }
+
+    function setHabitStatus(habitId, status){
+      const k = dayKey(state.currentDay);
+      if(!state.data[k]) state.data[k] = {};
+      if(status === null) delete state.data[k][habitId];
+      else state.data[k][habitId] = status;
+      saveState();
+      renderPhase();
+    }
+
+    function computeOverall(){
+      const total = state.habits.length * state.phaseDays;
+
+      let done = 0;
+      let missed = 0;
+
+      for(let d=1; d<=state.phaseDays; d++){
+        const dd = state.data[dayKey(d)] || {};
+        state.habits.forEach(h => {
+          if(dd[h.id] === true) done++;
+          else if(dd[h.id] === false) missed++;
+        });
+      }
+
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      return { total, done, missed, percent };
+    }
+
+    function computeToday(){
+      const total = state.habits.length;
+      const dd = state.data[dayKey(state.currentDay)] || {};
+
+      let done = 0;
+      let missed = 0;
+
+      state.habits.forEach(h => {
+        if(dd[h.id] === true) done++;
+        else if(dd[h.id] === false) missed++;
+      });
+
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      return { total, done, missed, percent };
+    }
+
+    function computeGoalProgress(goalId){
+      const linked = state.goalLinks[goalId] || [];
+      const total = linked.length * state.phaseDays;
+      if(total === 0) return { total:0, done:0, percent:0, linkedCount:0 };
+
+      let done = 0;
+      for(let d=1; d<=state.phaseDays; d++){
+        const dd = state.data[dayKey(d)] || {};
+        linked.forEach(hid => { if(dd[hid] === true) done++; });
+      }
+      const percent = Math.round((done / total) * 100);
+      return { total, done, percent, linkedCount: linked.length };
+    }
+
+    function setDay(d){
+      state.currentDay = Math.min(Math.max(1, d), state.phaseDays);
+      saveState();
+      renderPhase();
+    }
+
+    function addGoal(){
+      const text = $("goalInput").value.trim();
+      if(!text) return;
+      const g = { id: uid(), text };
+      state.goals.push(g);
+      state.goalLinks[g.id] = [];
+      $("goalInput").value = "";
+      saveState();
+      renderPhase();
+    }
+
+    function deleteGoal(goalId){
+      if(state.locked) return;
+      state.goals = state.goals.filter(g => g.id !== goalId);
+      delete state.goalLinks[goalId];
+      saveState();
+      renderPhase();
+    }
+
+    function addHabit(){
+      const text = $("habitInput").value.trim();
+      if(!text) return;
+      const h = { id: uid(), text };
+      state.habits.push(h);
+      $("habitInput").value = "";
+      saveState();
+      renderPhase();
+    }
+
+    function deleteHabit(habitId){
+      if(state.locked) return;
+
+      state.habits = state.habits.filter(h => h.id !== habitId);
+
+      for(let d=1; d<=state.phaseDays; d++){
+        const dd = state.data[dayKey(d)];
+        if(dd && dd[habitId] !== undefined) delete dd[habitId];
+      }
+
+      Object.keys(state.goalLinks).forEach(gid => {
+        state.goalLinks[gid] = (state.goalLinks[gid] || []).filter(id => id !== habitId);
+      });
+
+      saveState();
+      renderPhase();
+    }
+
+    function toggleLock(){
+      state.locked = !state.locked;
+      saveState();
+      renderPhase();
+    }
+
+    // ---------- Link modal ----------
+    let linkingGoalId = null;
+
+    function openLinker(goalId){
+      linkingGoalId = goalId;
+      const goal = state.goals.find(g => g.id === goalId);
+      $("linkTitle").textContent = `Link habits to: ${goal ? goal.text : "Goal"}`;
+
+      const linked = new Set(state.goalLinks[goalId] || []);
+      const wrap = $("linkList");
+      wrap.innerHTML = "";
+
+      if(state.habits.length === 0){
+        wrap.innerHTML = `<div class="empty">Add habits first, then link them to this goal.</div>`;
+      } else {
+        state.habits.forEach(h => {
+          const row = document.createElement("label");
+          row.className = "linkRow";
+          row.innerHTML = `
+            <input type="checkbox" data-hid="${h.id}" ${linked.has(h.id) ? "checked" : ""}>
+            <div style="font-weight:1000;">${escapeHTML(h.text)}</div>
+          `;
+          wrap.appendChild(row);
+        });
+      }
+
+      $("linkModal").classList.remove("hidden");
+    }
+
+    function closeLinker(){
+      linkingGoalId = null;
+      $("linkModal").classList.add("hidden");
+    }
+
+    function saveLinks(){
+      if(!linkingGoalId) return;
+      const checks = [...document.querySelectorAll("#linkList input[type='checkbox']")];
+      const ids = checks.filter(c => c.checked).map(c => c.dataset.hid);
+      state.goalLinks[linkingGoalId] = ids;
+      saveState();
+      closeLinker();
+      renderPhase();
+    }
+
+    // ---------- Export/Import/Reset ----------
+    function exportJSON(){
+      const payload = { exportedAt: new Date().toISOString(), phase: activePhase, state };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${activePhase.id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJSONFile(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const parsed = JSON.parse(reader.result);
+          const incoming = parsed.state || parsed;
+          if(!incoming || typeof incoming !== "object") throw new Error("Invalid file");
+
+          if(!Array.isArray(incoming.goals)) incoming.goals = [];
+          if(!Array.isArray(incoming.habits)) incoming.habits = [];
+          if(typeof incoming.data !== "object" || !incoming.data) incoming.data = {};
+          if(typeof incoming.goalLinks !== "object" || !incoming.goalLinks) incoming.goalLinks = {};
+          if(typeof incoming.currentDay !== "number") incoming.currentDay = 1;
+          if(typeof incoming.locked !== "boolean") incoming.locked = false;
+
+          // force correct days for this phase
+          incoming.phaseDays = activePhase.days;
+          incoming.currentDay = Math.min(Math.max(1, incoming.currentDay), incoming.phaseDays);
+
+          state = incoming;
+          saveState();
+          renderPhase();
+        } catch {
+          alert("Import failed. Use a JSON export from this app.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetPhase(){
+      const ok = confirm("Reset this phase? This deletes goals, habits, and day data.");
+      if(!ok) return;
+      state = structuredClone(defaultStateFor(activePhase.days));
+      saveState();
+      renderPhase();
+    }
+
+    // ---------- Phase render ----------
+    function renderLockBadges(){
+      $("lockBadge").className = "badge " + (state.locked ? "locked" : "unlocked");
+      $("lockBadge").textContent = state.locked ? "Locked" : "Unlocked";
+
+      $("habitsLockBadge").className = "badge " + (state.locked ? "locked" : "unlocked");
+      $("habitsLockBadge").textContent = state.locked ? "Locked" : "Unlocked";
+
+      $("lockBtn").textContent = state.locked ? "🔓 Unlock Phase" : "🔒 Lock Phase";
+    }
+
+    function renderGoals(){
+      const wrap = $("goalList");
+      wrap.innerHTML = "";
+
+      if(state.goals.length === 0){
+        wrap.innerHTML = `<div class="empty">Add your first goal above 👆 then 🔗 link habits to it.</div>`;
+        return;
+      }
+
+      state.goals.forEach((g, idx) => {
+        const gp = computeGoalProgress(g.id);
+
+        const card = document.createElement("div");
+        card.className = "goalCard";
+        card.innerHTML = `
+          <div class="goalTop">
+            <div style="min-width:0;">
+              <div class="goalTitle">Goal ${idx+1}: ${escapeHTML(g.text)}</div>
+              <div class="goalMeta">
+                Linked habits: <b>${gp.linkedCount}</b> • Progress: <b>${gp.percent}%</b> (${gp.done}/${gp.total || 0})
+              </div>
+              <div class="goalBar"><div class="goalFill" style="width:${gp.percent}%"></div></div>
+            </div>
+
+            <div class="goalBtns">
+              <button class="miniBtn" type="button">🔗 Link</button>
+              <button class="miniBtn dangerBtn" type="button">Delete</button>
+            </div>
+          </div>
+        `;
+
+        const linkBtn = card.querySelectorAll(".miniBtn")[0];
+        const delBtn  = card.querySelectorAll(".miniBtn")[1];
+
+        linkBtn.addEventListener("click", () => openLinker(g.id));
+        delBtn.addEventListener("click", () => {
+          if(state.locked) return;
+          deleteGoal(g.id);
+        });
+
+        if(state.locked){
+          delBtn.style.opacity = ".45";
+          delBtn.style.cursor = "not-allowed";
+        }
+
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderHabits(){
+      $("dayTitle").textContent = `Habits for Day ${state.currentDay}`;
+      $("dayPill").textContent = `Day ${state.currentDay}`;
+
+      const list = $("habitList");
+      list.innerHTML = "";
+
+      if(state.habits.length === 0){
+        list.innerHTML = `<div class="empty">Add your first habit above 👆</div>`;
+        return;
+      }
+
+      const day = state.currentDay;
+
+      state.habits.forEach(h => {
+        const st = statusOf(day, h.id);
+
+        const row = document.createElement("div");
+        row.className = "habit " + (st === "done" ? "doneRow" : st === "miss" ? "missRow" : "");
+
+        const left = document.createElement("label");
+        left.className = "cb";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = (st === "done");
+        cb.addEventListener("change", () => {
+          if(cb.checked) setHabitStatus(h.id, true);
+          else setHabitStatus(h.id, null);
+        });
+
+        const textWrap = document.createElement("div");
+        textWrap.style.minWidth = "0";
+
+        const name = document.createElement("div");
+        name.className = "habit-name";
+        name.textContent = h.text;
+
+        const meta = document.createElement("div");
+        meta.className = "habit-meta";
+        meta.innerHTML = badgeFor(st);
+
+        textWrap.appendChild(name);
+        textWrap.appendChild(meta);
+
+        left.appendChild(cb);
+        left.appendChild(textWrap);
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const missBtn = document.createElement("button");
+        missBtn.type = "button";
+        missBtn.className = "icon miss";
+        missBtn.title = "Mark Missed";
+        missBtn.textContent = "✖";
+        missBtn.addEventListener("click", () => setHabitStatus(h.id, false));
+
+        const clearBtn = document.createElement("button");
+        clearBtn.type = "button";
+        clearBtn.className = "icon clear";
+        clearBtn.title = "Clear";
+        clearBtn.textContent = "⟲";
+        clearBtn.addEventListener("click", () => setHabitStatus(h.id, null));
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "icon";
+        delBtn.title = state.locked ? "Locked" : "Delete habit";
+        delBtn.textContent = "🗑️";
+        delBtn.addEventListener("click", () => {
+          if(state.locked) return;
+          const ok = confirm("Delete this habit? (removes its day data too)");
+          if(!ok) return;
+          deleteHabit(h.id);
+        });
+
+        if(state.locked){
+          delBtn.style.opacity = ".45";
+          delBtn.style.cursor = "not-allowed";
+        }
+
+        actions.appendChild(missBtn);
+        actions.appendChild(clearBtn);
+        actions.appendChild(delBtn);
+
+        row.appendChild(left);
+        row.appendChild(actions);
+
+        list.appendChild(row);
+      });
+    }
+
+    function renderProgress(){
+      const overall = computeOverall();
+      const today = computeToday();
+
+      $("overallPercent").textContent = overall.percent + "%";
+      $("overallBar").style.width = overall.percent + "%";
+      $("overallText").textContent =
+        `${overall.done} done / ${overall.total} total (missed: ${overall.missed}).`;
+
+      $("todayPercent").textContent = today.percent + "%";
+      $("todayBar").style.width = today.percent + "%";
+      $("todayText").textContent =
+        `Day ${state.currentDay}: ${today.done} done / ${today.total} total (missed: ${today.missed}).`;
+    }
+
+    function renderGoalsProgressPanel(){
+      const panel = $("goalsProgressPanel");
+      panel.innerHTML = "";
+
+      if(state.goals.length === 0){
+        panel.innerHTML = `<div class="empty">No goals yet.</div>`;
+        return;
+      }
+
+      state.goals.forEach((g, i) => {
+        const gp = computeGoalProgress(g.id);
+
+        const box = document.createElement("div");
+        box.className = "goalCard";
+        box.innerHTML = `
+          <div class="goalTitle">✅ Goal ${i+1}: ${escapeHTML(g.text)}</div>
+          <div class="goalMeta">Linked habits: <b>${gp.linkedCount}</b> • ${gp.done}/${gp.total || 0}</div>
+          <div class="goalBar"><div class="goalFill" style="width:${gp.percent}%"></div></div>
+          <div class="goalMeta"><b>${gp.percent}%</b> aligned</div>
+        `;
+        panel.appendChild(box);
+      });
+    }
+
+    function renderPhase(){
+      renderLockBadges();
+      renderGoals();
+      renderHabits();
+      renderProgress();
+      renderGoalsProgressPanel();
+    }
+
+    // ---------- Wire ----------
+    function wire(){
+      // home created by renderHome()
+
+      // phase buttons
+      $("backBtn").addEventListener("click", showHome);
+      $("lockBtn").addEventListener("click", toggleLock);
+
+      $("addGoalBtn").addEventListener("click", addGoal);
+      $("goalInput").addEventListener("keydown", e => { if(e.key === "Enter") addGoal(); });
+
+      $("addHabitBtn").addEventListener("click", addHabit);
+      $("habitInput").addEventListener("keydown", e => { if(e.key === "Enter") addHabit(); });
+
+      $("prevDayBtn").addEventListener("click", () => setDay(state.currentDay - 1));
+      $("nextDayBtn").addEventListener("click", () => setDay(state.currentDay + 1));
+
+      $("exportBtn").addEventListener("click", exportJSON);
+
+      $("importBtn").addEventListener("click", () => $("fileInput").click());
+      $("fileInput").addEventListener("change", (e) => {
+        const f = e.target.files && e.target.files[0];
+        if(f) importJSONFile(f);
+        e.target.value = "";
+      });
+
+
+      $("cancelLinkBtn").addEventListener("click", closeLinker);
+      $("saveLinkBtn").addEventListener("click", saveLinks);
+
+      $("linkModal").addEventListener("click", (e) => {
+        if(e.target.id === "linkModal") closeLinker();
+      });
+    }
+
+    wire();
+    showHome(); // start on phase shells
+  </script>
+</body>
+</html>
